@@ -1,22 +1,29 @@
-﻿using System.Net.WebSockets;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Channels;
+﻿using System.Collections.Concurrent;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Sdv.Databroker.V1;
 
-var app = WebApplication.CreateBuilder().Build();
-app.UseWebSockets();
+var builder = WebApplication.CreateBuilder();
+builder.Services.AddSingleton<ConcurrentQueue<Datapoint>>();
+builder.Services.AddHostedService<KuksaService>();
+var app = builder.Build();
 
-app.Use(async (context, next) =>
+app.MapGet("/", (ConcurrentQueue<Datapoint> datapoints) => datapoints);
+app.Run();
+
+record Datapoint(double Speed, long Time);
+
+sealed class KuksaService : BackgroundService
 {
-    if (context.WebSockets.IsWebSocketRequest)
-    {
-        if (context.WebSockets.IsWebSocketRequest)
-        {
-            using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+    private ConcurrentQueue<Datapoint> datapoints;
 
+    public KuksaService(ConcurrentQueue<Datapoint> datapoints)
+    {
+        this.datapoints = datapoints;
+    }
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
             var channel = GrpcChannel.ForAddress("http://localhost:55555");
             var client = new Broker.BrokerClient(channel);
 
@@ -24,28 +31,17 @@ app.Use(async (context, next) =>
 
             while (await response.ResponseStream.MoveNext())
             {
-                await webSocket.SendAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new
-                {
-                    SteeringWheelAngle = response.ResponseStream.Current.Fields["Vehicle.Chassis.SteeringWheel.Angle"].Int32Value,
-                    VehicleSpeed = response.ResponseStream.Current.Fields["Vehicle.Speed"].FloatValue,
-                    Timestamp = response.ResponseStream.Current.Fields["Vehicle.CurrentLocation.Timestamp"].Timestamp
-                })),
-                WebSocketMessageType.Text,
-                true,
-                CancellationToken.None);
+                var timestamp = response.ResponseStream.Current.Fields["Vehicle.CurrentLocation.Timestamp"].Timestamp;
+                var milliseconds = (long)(timestamp.Seconds * 1000 + timestamp.Nanos * 0.000001);
 
-                Console.WriteLine(response.ResponseStream.Current);
+                var dp = new Datapoint(response.ResponseStream.Current.Fields["Vehicle.Speed"].FloatValue, milliseconds);
+
+                this.datapoints.Enqueue(dp);
+
+                if (this.datapoints.Count > 200) {
+                    // Evict the oldest entry in the queue.
+                    this.datapoints.TryDequeue(out var _);
+                }
             }
-        }
-        else
-        {
-            await next(context);
-        }
     }
-    else
-    {
-        context.Response.StatusCode = StatusCodes.Status400BadRequest;
-    }
-});
-
-app.Run();
+}
