@@ -1,0 +1,88 @@
+# Copyright (c) 2022 Robert Bosch GmbH and Microsoft Corporation
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+muto:
+  stack_topic: /stack
+  twin_topic: /twin
+  type: simulator
+  twin_url: "http://ditto:ditto@sandbox.composiv.ai"
+  commands:
+      - name: ros/topic
+        service: rostopic_list
+        plugin: CommandPlugin
+      - name: ros/topic/info
+        service: rostopic_info
+        plugin: CommandPlugin
+      - name: ros/topic/echo
+        service: rostopic_echo
+        plugin: CommandPlugin
+      - name: ros/node
+        service: rosnode_list
+        plugin: CommandPlugin
+      - name: ros/node/info
+        service: rosnode_info
+        plugin: CommandPlugin
+      - name: ros/param
+        service: rosparam_list
+        plugin: CommandPlugin
+      - name: ros/param/get
+        service: rosparam_get
+        plugin: CommandPlugin
+  pipelines:
+      - name:  start
+        pipeline:
+          - sequence:
+            - service: muto_compose
+              plugin: ComposePlugin
+            - service: muto_start_stack
+              plugin: ComposePlugin
+        compensation:
+          - service: muto_kill_stack
+            plugin: ComposePlugin
+      - name:  kill
+        pipeline:
+          - sequence:
+            - service: muto_compose
+              plugin: ComposePlugin
+            - service: muto_kill_stack
+              plugin: ComposePlugin
+        compensation:
+          - service: muto_kill_stack
+            plugin: ComposePlugin
+      - name:  apply
+        pipeline:
+          - sequence:
+            - service: muto_compose
+              plugin: ComposePlugin
+            - service: muto_apply_stack
+              plugin: ComposePlugin
+        compensation:
+          - service: muto_kill_stack
+            plugin: ComposePlugin
+  mqtt:
+    host: sandbox.composiv.ai # subject to change
+    port: 1883
+    keep_alive: 60
+    user: none
+    password: none
+  thing:
+    namespace: org.eclipse.muto.sandbox # subject to change
+    definition: org.eclipse.muto:EdgeDevice:0.0.1
+    attributes:
+      brand: f1tenth.org
+      model: f1tenthsimulation
+    anonymous: False  # Use this for automatically generated id (uuid based)
+    #   if anonymous is True or anynoymous param is missing, name/id will be auto generated
+    # TODO: edit the name below
+    name: bcx-team-11
