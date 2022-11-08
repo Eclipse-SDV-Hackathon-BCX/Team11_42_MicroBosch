@@ -1,0 +1,5 @@
+data = {'speed': 81.0, 'time_milliseconds': 1667927807487}
+data = {'speed': 82.0, 'time_milliseconds': 1667927808127}
+data = {'speed': 83.0, 'time_milliseconds': 1667927812515}
+data = {'speed': 84.0, 'time_milliseconds': 1667927813304}
+data = {'speed': 85.0, 'time_milliseconds': 1667927815746}
