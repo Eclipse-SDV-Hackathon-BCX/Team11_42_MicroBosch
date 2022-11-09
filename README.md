@@ -1,5 +1,5 @@
 # Team11_42_MicroBosch
-Calculating the Driving metric score
+Calculating the Driving metric score through Jerk
 
 Hack Challenge #2 : A solution for Safety features of Drivers with cloud connected intervehicle Data.
 
@@ -21,4 +21,6 @@ Hack Challenge #2 : A solution for Safety features of Drivers with cloud connect
             1. Interaction between Muto and Kuksa client
             2. CAN data we got processed with computer generated data and timestamps
             3. Only speed value cannot help interpreting the relations.
+            4. MQTT subscription was not clear with its annotations. So we used gRPC protocol
+            5. 
               
