@@ -1,7 +1,7 @@
 # Team11_42_MicroBosch
 Calculating the Driving metric score
 
-Hack Challenge #2 : Figuring out a solution for Safety features of Drivers with cloud connected intervehicle Data.
+Hack Challenge #2 : A solution for Safety features of Drivers with cloud connected intervehicle Data.
 
 ##Probable Problematic Scenario: 
 
