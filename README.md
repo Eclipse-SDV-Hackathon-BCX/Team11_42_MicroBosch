@@ -22,5 +22,3 @@ Hack Challenge #2 : A solution for Safety features of Drivers with cloud connect
             2. CAN data we got processed with computer generated data and timestamps
             3. Only speed value cannot help interpreting the relations.
             4. MQTT subscription was not clear with its annotations. So we used gRPC protocol
-            5. 
-              
