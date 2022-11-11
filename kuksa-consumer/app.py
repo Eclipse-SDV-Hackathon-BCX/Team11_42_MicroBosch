@@ -12,7 +12,7 @@ import json
 from sklearn import preprocessing
 data = requests.get('http://localhost:5000').json()
 #print(res_a)
-# f = open("/home/aswin/jine/Team11_42_MicroBosch/demo/get_response.json")
+# f = open("demo/get_response.json")
 # data = json.load(f)
 #print(data)
 vel = []
@@ -100,9 +100,29 @@ plt.plot(peaks, x[peaks], "x")
 plt.ylabel("Jerk", fontdict=None, labelpad=None)
 plt.xlabel("Datapoints", fontdict=None, labelpad=None)
 a = plt.show()
+
+# config streamlit
+st.set_page_config(layout="wide")
+st.markdown(""" <style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style> """, unsafe_allow_html=True)
+
+padding = 0.5
+st.markdown(f""" <style>
+    .reportview-container .main .block-container{{
+        padding-top: {padding}rem;
+        padding-right: {padding}rem;
+        padding-left: {padding}rem;
+        padding-bottom: {padding}rem;
+    }} </style> """, unsafe_allow_html=True)
+
+c1, c2 = st.columns(2)
+
 st.sidebar.markdown(sidebar_text)
 # x = requests.get('http://localhost:5000')
 
+<<<<<<< HEAD
 # print(x.status_code)
 # print(x.json())
 # res_json = x.json()
@@ -110,12 +130,29 @@ st.markdown("#### Driver Score" ":grin:")
 st.markdown(f"**Jerk:** {peaks}")
 st.markdown(f"**Score_overall:** {overall_score*100}")
 st.markdown(f"**Score_Last_10s:** {last_100_score*100}")
+=======
+print(x.status_code)
+print(x.json())
+res_json = x.json()
+>>>>>>> 9df3eba64a145876a678de5be51761e85f90e57f
 
-st.set_option('deprecation.showPyplotGlobalUse', False)
-st.pyplot(a)
+# st.title('Driving Score in Real Time')
+
+with c1:
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    st.pyplot(a)
+
+    st.markdown("#### Driver Score")
+    st.markdown(f"**Score:** {peaks}")
+    st.markdown(f"**Score_overall:** {overall_score*100}")
+    st.markdown(f"**Score_Last_10s:** {last_100_score*100}")
+
+
+
+
 # with open("vehice.json", 'w') as f:
 #     json.dump(res_json, f)
-video_file = open('/home/aswin/jine/Team11_42_MicroBosch/demo/f1_racer_without_events.mp4', 'rb')
+video_file = open('demo/f1_racer_without_events.mp4', 'rb')
 video_bytes = video_file.read()
-
-st.video(video_bytes)
+with c2:
+    st.video(video_bytes)
