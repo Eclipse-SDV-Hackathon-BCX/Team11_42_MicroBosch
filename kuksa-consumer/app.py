@@ -10,7 +10,6 @@ pd.options.display.float_format = '{:,.10f}'.format
 import numpy as np
 import json
 from sklearn import preprocessing
-# from urllib.request
 data = requests.get('http://localhost:5000').json()
 #print(res_a)
 # f = open("/home/aswin/jine/Team11_42_MicroBosch/demo/get_response.json")
@@ -93,20 +92,22 @@ last_100_score = df_table['peak'].tail(100).sum() / df_table['peak'].tail(100).c
 last_100_time = df_table['diff_time'].tail(100).sum() 
 print('Your score for last ', last_100_time / 1000, 'seconds = ', last_100_score * 100)
 sidebar_text = f"# Introduction\n\nWe would like to provide realtime feedback to the drivers: \n\n - [**Muto**](https://dashboard.composiv.ai/): Choose the vehicle\n- [**Vehicle**](https://github.com/eclipse-sdv-hackathon-bcx): Foxglove Playground\n- [**Studio Foxglove**](https://studio.foxglove.dev/)"
-x = df_table['jerk']
+x = df_table['jerk']/10000
 peaks, _ = find_peaks(x, distance=1)
 np.diff(peaks)
 plt.plot(x)
 plt.plot(peaks, x[peaks], "x")
+plt.ylabel("Jerk", fontdict=None, labelpad=None)
+plt.xlabel("Datapoints", fontdict=None, labelpad=None)
 a = plt.show()
 st.sidebar.markdown(sidebar_text)
-x = requests.get('http://localhost:5000')
+# x = requests.get('http://localhost:5000')
 
-print(x.status_code)
-print(x.json())
-res_json = x.json()
-st.markdown("#### Driver Score")
-st.markdown(f"**Score:** {peaks}")
+# print(x.status_code)
+# print(x.json())
+# res_json = x.json()
+st.markdown("#### Driver Score" ":grin:")
+st.markdown(f"**Jerk:** {peaks}")
 st.markdown(f"**Score_overall:** {overall_score*100}")
 st.markdown(f"**Score_Last_10s:** {last_100_score*100}")
 

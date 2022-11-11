@@ -22,3 +22,7 @@ Hack Challenge #2 : A solution for Safety features of Drivers with cloud connect
             2. CAN data we got processed with computer generated data and timestamps
             3. Only speed value cannot help interpreting the relations.
               
+The final demo where Muto simulation platform is running. We use dotnet C# REST API and use Request library in python to get the real-time data. Streamlit is used in the frontend to display the predicted score and the Jerk peaks.
+
+![video] 
+(/demo/2022_11_09_151853.mp4)
