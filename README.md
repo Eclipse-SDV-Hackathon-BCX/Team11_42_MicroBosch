@@ -21,12 +21,8 @@ Hack Challenge #2 : A solution for Safety features of Drivers with cloud connect
             1. Interaction between Muto and Kuksa client
             2. CAN data we got processed with computer generated data and timestamps
             3. Only speed value cannot help interpreting the relations.
-<<<<<<< HEAD
               
 The final demo where Muto simulation platform is running. We use dotnet C# REST API and use Request library in python to get the real-time data. Streamlit is used in the frontend to display the predicted score and the Jerk peaks.
 
 ![video] 
 (/demo/2022_11_09_151853.mp4)
-=======
-            4. MQTT subscription was not clear with its annotations. So we used gRPC protocol
->>>>>>> 9df3eba64a145876a678de5be51761e85f90e57f
